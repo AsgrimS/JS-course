@@ -9,3 +9,15 @@ body {
 .list-item:hover{
     color: blue;
 }
+
+.test{
+    color: brown;
+};
+
+.visible{
+    display: block;
+}
+
+.invisible{
+    display: none;
+}
