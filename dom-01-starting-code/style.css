@@ -1,0 +1,11 @@
+body {
+	background-color: gainsboro;
+}
+
+.list-item{
+    transition: ease-in-out 0.2s;
+}
+
+.list-item:hover{
+    color: blue;
+}

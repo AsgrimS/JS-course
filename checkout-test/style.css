@@ -1,0 +1,20 @@
+body {
+	background-color: gainsboro;
+}
+
+#cart{
+   text-transform: capitalize;
+}
+
+.item{
+    margin-top: 1rem;
+
+}
+.item-cart{
+    margin-top: 1rem;
+
+}
+
+.cart-button{
+    margin-left: 1rem;
+}
