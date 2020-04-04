@@ -83,30 +83,49 @@
 
 // console.log(prices);
 
-const prices = [10.99, 5.99, 3.88, 6.59];
-const tax = 0.19;
+// const prices = [10.99, 5.99, 3.88, 6.59];
+// const tax = 0.19;
 
-const taxAdjustedPrices = prices.map(function(price, idx, prices) {
-	const priceObj = { index: idx, taxAdjPrice: price * (1 + tax) };
-	return priceObj;
-});
+// const taxAdjustedPrices = prices.map(function(price, idx, prices) {
+// 	const priceObj = { index: idx, taxAdjPrice: price * (1 + tax) };
+// 	return priceObj;
+// });
 
-// console.log(prices, taxAdjustedPrices);
+// // console.log(prices, taxAdjustedPrices);
 
-const sortedPrices = prices.sort(function(a, b){
-    if (a > b){
-        return 1;
-    } else if (a === b) {
-        return 0;
-    } else {
-        return -1;
-    }
-});
+// const sortedPrices = prices.sort(function(a, b) {
+// 	if (a > b) {
+// 		return 1;
+// 	} else if (a === b) {
+// 		return 0;
+// 	} else {
+// 		return -1;
+// 	}
+// });
 
-// console.log(sortedPrices.reverse());
+// // console.log(sortedPrices.reverse());
 
-const filteredArray = prices.filter(function(price, index, prices){
-    return price > 6;
-});
+// const filteredArray = prices.filter(function(price, index, prices) {
+// 	return price > 6;
+// });
 
-console.log(filteredArray);
+// // console.log(filteredArray);
+
+// const sum = prices.reduce(function(prevValue, curValue, curIndex, prices) {
+// 	return prevValue + curValue;
+// }, 0);
+
+// console.log(sum);
+
+// const data = 'new york;10.99;2000';
+
+// const transData = data.split(';');
+
+// console.log(transData);
+
+// const name = ['Max', 'Scwarts'];
+// const nameF = name.join(' ');
+// console.log(nameF);
+
+// const copiedName = [...name];
+// console.log(copiedName);
