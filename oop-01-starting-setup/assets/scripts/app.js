@@ -10,9 +10,22 @@ class Product {
 class ShoppingCart {
 	items = [];
 
+	set cartItems(value) {
+		this.items = value;
+		this.totalOutput.innerHTML = `<h2>Total: \$${this.totalAmount.toFixed(2)}</h2>`;
+	}
+
+	get totalAmount() {
+		const sum = this.items.reduce(function (prevValue, curItem) {
+			return prevValue + curItem.price;
+		}, 0);
+		return sum;
+	}
+
 	addProduct(product) {
-		this.items.unshift(product);
-		this.totalOutput.innerHTML = `<h2>Total: \$${1}</h2>`;
+		const updatedItems = [...this.items];
+		updatedItems.unshift(product);
+		this.cartItems = updatedItems;
 	}
 
 	render() {
