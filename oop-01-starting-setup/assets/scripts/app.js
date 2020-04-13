@@ -1,4 +1,9 @@
 class Product {
+	// title = 'DEFAULT';
+	// imageUrl;
+	// description;
+	// price;
+
 	constructor(title, image, desc, price) {
 		this.title = title;
 		this.imageUrl = image;
@@ -15,9 +20,14 @@ class ElementAttribute {
 }
 
 class Component {
-	constructor(renderHookId) {
+	constructor(renderHookId, shouldRender = true) {
 		this.hookId = renderHookId;
+		if (shouldRender) {
+			this.render();
+		}
 	}
+
+	render() {}
 
 	createRootElement(tag, cssClasses, attributes) {
 		const rootElement = document.createElement(tag);
@@ -45,9 +55,10 @@ class ShoppingCart extends Component {
 	}
 
 	get totalAmount() {
-		const sum = this.items.reduce(function (prevValue, curItem) {
-			return prevValue + curItem.price;
-		}, 0);
+		const sum = this.items.reduce(
+			(prevValue, curItem) => prevValue + curItem.price,
+			0
+		);
 		return sum;
 	}
 
@@ -57,92 +68,99 @@ class ShoppingCart extends Component {
 
 	addProduct(product) {
 		const updatedItems = [...this.items];
-		updatedItems.unshift(product);
+		updatedItems.push(product);
 		this.cartItems = updatedItems;
 	}
 
 	render() {
 		const cartEl = this.createRootElement('section', 'cart');
 		cartEl.innerHTML = `
-			<h2>Total: \$${0}</h2>
-			<button>Order Now!</button>
-		`;
-		cartEl.className = 'cart';
+      <h2>Total: \$${0}</h2>
+      <button>Order Now!</button>
+    `;
 		this.totalOutput = cartEl.querySelector('h2');
 	}
 }
 
-class ProductItem {
-	constructor(product) {
+class ProductItem extends Component {
+	constructor(product, renderHookId) {
+		super(renderHookId, false);
 		this.product = product;
+		this.render();
 	}
 
 	addToCart() {
-		console.log('Adding product to cart...');
-		console.log(this.product);
 		App.addProductToCart(this.product);
 	}
 
 	render() {
-		const prodEl = document.createElement('li');
-		prodEl.className = 'product-item';
+		const prodEl = this.createRootElement('li', 'product-item');
 		prodEl.innerHTML = `
-		  <div>
-			<img src="${this.product.imageUrl}" alt="${this.product.title}" >
-			<div class="product-item__content">
-			  <h2>${this.product.title}</h2>
-			  <h3>\$${this.product.price}</h3>
-			  <p>${this.product.description}</p>
-			  <button>Add to Cart</button>
-			</div>
-		  </div>
-		`;
-		const addCartBtn = prodEl.querySelector('button');
-		addCartBtn.addEventListener('click', this.addToCart.bind(this));
-		return prodEl;
+        <div>
+          <img src="${this.product.imageUrl}" alt="${this.product.title}" >
+          <div class="product-item__content">
+            <h2>${this.product.title}</h2>
+            <h3>\$${this.product.price}</h3>
+            <p>${this.product.description}</p>
+            <button>Add to Cart</button>
+          </div>
+        </div>
+      `;
+		const addCartButton = prodEl.querySelector('button');
+		addCartButton.addEventListener('click', this.addToCart.bind(this));
 	}
 }
 
-class ProductList {
-	products = [
-		new Product(
-			'A Pillow',
-			'https://media.sheridanoutlet.com.au/catalog/product/cache/1/image/1200x/17f82f742ffe127f42dca9de82fb58b1/1/7/1700x1700_fresh-loft-pillow-white.jpg?impolicy=original',
-			'A soft pillow!',
-			19.99
-		),
-		new Product(
-			'A Carpet',
-			'https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Ardabil_Carpet.jpg/397px-Ardabil_Carpet.jpg',
-			'A carpet which you might like - or not.',
-			89.99
-		),
-	];
+class ProductList extends Component {
+	products = [];
 
-	constructor() {}
+	constructor(renderHookId) {
+		super(renderHookId);
+		this.fetchProducts();
+	}
 
-	render() {
-		const prodList = document.createElement('ul');
-		prodList.className = 'product-list';
+	fetchProducts() {
+		this.products = [
+			new Product(
+				'A Pillow',
+				'https://www.ikea.com/gb/en/images/products/jordroek-pillow-softer__0598551_PE677689_S5.JPG?f=s',
+				'A soft pillow!',
+				19.99
+			),
+			new Product(
+				'A Carpet',
+				'https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Ardabil_Carpet.jpg/397px-Ardabil_Carpet.jpg',
+				'A carpet which you might like - or not.',
+				89.99
+			),
+		];
+		this.renderProducts();
+	}
+
+	renderProducts() {
 		for (const prod of this.products) {
-			const productItem = new ProductItem(prod);
-			const prodEl = productItem.render();
-			prodList.append(prodEl);
+			new ProductItem(prod, 'prod-list');
 		}
-		return prodList;
+	}
+
+	render() {
+		this.createRootElement('ul', 'product-list', [
+			new ElementAttribute('id', 'prod-list'),
+		]);
+		if (this.products && this.products.length > 0) {
+			this.renderProducts();
+		}
 	}
 }
 
-class Shop {
+class Shop extends Component {
+	constructor() {
+		super();
+	}
+
 	render() {
-		const renderHook = document.getElementById('app');
-
 		this.cart = new ShoppingCart('app');
-		this.cart.render();
-		const productList = new ProductList();
-		const prodListEl = productList.render();
-
-		renderHook.append(prodListEl);
+		new ProductList('app');
 	}
 }
 
@@ -151,7 +169,6 @@ class App {
 
 	static init() {
 		const shop = new Shop();
-		shop.render();
 		this.cart = shop.cart;
 	}
 
